@@ -21,6 +21,16 @@ const articleSchema = {
 
 const Article = mongoose.model("Article", articleSchema);
 
+app.get("/articles", async (req, res) => {
+    try {
+        const foundArticles = await Article.find();
+        res.send(foundArticles);
+    } catch (err) {
+        console.log(err);
+    }
+});
+
+
 //TODO
 
 app.listen(3000, function() {
