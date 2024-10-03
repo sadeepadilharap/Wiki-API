@@ -106,6 +106,17 @@ app.route("/articles/:articleTitle")
             res.send(err);
         }
     }
+)
+
+.delete(
+    async (req, res) => {
+        try {
+            await Article.deleteOne({title: req.params.articleTitle});
+            res.send("Successfully deleted the corresponding article.");
+        } catch (err) {
+            res.send(err);
+        }
+    }
 );
 
 app.listen(3000, function() {
