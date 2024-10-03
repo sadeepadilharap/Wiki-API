@@ -77,6 +77,35 @@ app.route("/articles/:articleTitle")
             res.send(err);
         }
     }
+)
+
+.put(
+    async (req, res) => {
+        try {
+            await Article.updateOne(
+                {title: req.params.articleTitle},
+                {title: req.body.title, content: req.body.content},
+                {overwrite: true}
+            );
+            res.send("Successfully updated article.");
+        } catch (err) {
+            res.send(err);
+        }
+    }
+)
+
+.patch(
+    async (req, res) => {
+        try {
+            await Article.updateOne(
+                {title: req.params.articleTitle},
+                {$set: req.body}
+            );
+            res.send("Successfully updated article.");
+        } catch (err) {
+            res.send(err);
+        }
+    }
 );
 
 app.listen(3000, function() {
