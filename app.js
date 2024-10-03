@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/wikiDB", {useNewUrlParser: true});
+mongoose.connect("mongodb://localhost:27017/wikiDB");
 
 const articleSchema = {
     title: String,
@@ -29,6 +29,21 @@ app.get("/articles", async (req, res) => {
         console.log(err);
     }
 });
+
+app.post("/articles", async (req, res) => {
+    const newArticle = new Article({
+        title: req.body.title,
+        content: req.body.content
+    });
+
+    newArticle.save(function(err) {
+        if (!err) {
+            res.send("Successfully added a new article.");
+        } else {
+            res.send(err);
+        }
+    });
+})
 
 
 //TODO
