@@ -21,41 +21,63 @@ const articleSchema = {
 
 const Article = mongoose.model("Article", articleSchema);
 
-app.get("/articles", async (req, res) => {
-    try {
-        const foundArticles = await Article.find();
-        res.send(foundArticles);
-    } catch (err) {
-        console.log(err);
+//////////////////////////////Requests Targeting All Articles//////////////////////////////
+
+app.route("/articles")
+.get(
+    async (req, res) => {
+        try {
+            const foundArticles = await Article.find();
+            res.send(foundArticles);
+        } catch (err) {
+            console.log(err);
+        }
     }
-});
-
-app.post("/articles", async (req, res) => {
-    try {
-      const newArticle = new Article({
-        title: req.body.title,
-        content: req.body.content
-      });
-  
-      await newArticle.save(); // Await the save operation
-      res.send("Successfully added a new article.");
-    } catch (err) {
-      res.status(500).send(err); // Handle any error and respond with status 500
+)
+.post(
+    async (req, res) => {
+        try {
+          const newArticle = new Article({
+            title: req.body.title,
+            content: req.body.content
+          });
+      
+          await newArticle.save(); // Await the save operation
+          res.send("Successfully added a new article.");
+        } catch (err) {
+          res.status(500).send(err); // Handle any error and respond with status 500
+        }
     }
-});
-  
-
-app.delete("/articles",async (req, res) => {
-    try {
-        await Article.deleteMany();
-        res.send("Successfully deleted all articles.");
-    } catch (err) {
-        res.send(err);
+)
+.delete(
+    async (req, res) => {
+        try {
+            await Article.deleteMany();
+            res.send("Successfully deleted all articles.");
+        } catch (err) {
+            res.send(err);
+        }
     }
-});
+);
 
+//////////////////////////////Requests Targeting Specific Articles//////////////////////////////
 
-//TODO
+app.route("/articles/:articleTitle")
+
+.get(
+    async (req, res) => {
+        try {
+            const foundArticle = await Article.findOne({title: req.params.articleTitle});
+            if (foundArticle) {
+                res.send(foundArticle);
+            } else {
+                res.send("No articles matching that title was found.");
+            }
+        } catch (err) {
+            res.send(err);
+        }
+    }
+);
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");
