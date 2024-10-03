@@ -31,19 +31,28 @@ app.get("/articles", async (req, res) => {
 });
 
 app.post("/articles", async (req, res) => {
-    const newArticle = new Article({
+    try {
+      const newArticle = new Article({
         title: req.body.title,
         content: req.body.content
-    });
+      });
+  
+      await newArticle.save(); // Await the save operation
+      res.send("Successfully added a new article.");
+    } catch (err) {
+      res.status(500).send(err); // Handle any error and respond with status 500
+    }
+});
+  
 
-    newArticle.save(function(err) {
-        if (!err) {
-            res.send("Successfully added a new article.");
-        } else {
-            res.send(err);
-        }
-    });
-})
+app.delete("/articles",async (req, res) => {
+    try {
+        await Article.deleteMany();
+        res.send("Successfully deleted all articles.");
+    } catch (err) {
+        res.send(err);
+    }
+});
 
 
 //TODO
